@@ -109,7 +109,7 @@ async def update_post(id: int, post: Post):
 
     cursor.execute("""UPDATE public.posts SET title=%s, content=%s, published=%s, rating=%s 
     WHERE id=%s RETURNING *""", (post.title, post.content, post.published, post.rating, str(id)))
-    updated_post = cursor.fetchall()
+    updated_post = cursor.fetchone()
     database_connect.commit() #This saves the new post to Database.
 
     #Chech if the index is there in the ID.
@@ -117,6 +117,6 @@ async def update_post(id: int, post: Post):
         #response.status_code = status.HTTP_404_NOT_FOUND
         #return {"message": f"Post with ID: {id} does not exist."}
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
-                            detail = f"Unable to delete post with ID: {id} does not exist.")
+                            detail = f"Unable to Update post with ID: {id} does not exist.")
 
-    return {"Data": updated_post}
+    return {"data": updated_post}
