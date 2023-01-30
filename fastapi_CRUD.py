@@ -1,5 +1,5 @@
 #This project demonstrate the use of APIs (fastapi) to perform CRUD Operations on a postgres Database.
-#To use the APIs run in cmd: uvicorn main:app --reload
+#To use the APIs run in cmd: uvicorn fastapi_CRUD:app --reload
 
 from fastapi import FastAPI, Response, status, HTTPException
 from pydantic import BaseModel
