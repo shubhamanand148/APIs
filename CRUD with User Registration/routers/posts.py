@@ -4,16 +4,16 @@ from sqlalchemy.orm import Session
 from database import get_db
 
 
-router = APIRouter()
+router = APIRouter(prefix="/posts", tags=['posts'])
 
-@router.get("/posts")
+@router.get("")
 async def get_posts(db: Session = Depends(get_db)):
     posts = db.query(models.Post).all()
     return posts
 
 #Creates Post
 #The default status code is 200, but it is recommended to use 201 while creating a data.
-@router.post("/posts", status_code = status.HTTP_201_CREATED)
+@router.post("", status_code = status.HTTP_201_CREATED)
 async def create_post(post: schemas.Post, db: Session = Depends(get_db)):
 
 # post is Post class and models.Post is from models class.
@@ -24,13 +24,13 @@ async def create_post(post: schemas.Post, db: Session = Depends(get_db)):
     print(post.content)
     return new_post
 
-@router.get("/posts/latest")
+@router.get("/latest")
 async def get_latest_post(db: Session = Depends(get_db)):
 
     post = db.query(models.Post).order_by(models.Post.created_at.desc()).first()
     return post
 
-@router.get("/posts/{id}", response_model=schemas.PostResponse)
+@router.get("/{id}", response_model=schemas.PostResponse)
 async def post_by_id(id: int, db: Session = Depends(get_db)):
     post = db.query(models.Post).filter(models.Post.id == id).first()
 
@@ -43,7 +43,7 @@ async def post_by_id(id: int, db: Session = Depends(get_db)):
 
 # HTTP Status 204 (No Content) indicates that the server has successfully fulfilled the request
 # and that there is no content to send in the response payload body.
-@router.delete("/posts/{id}", status_code=status.HTTP_204_NO_CONTENT)
+@router.delete("/{id}", status_code=status.HTTP_204_NO_CONTENT)
 async def delete_post(id: int, db: Session = Depends(get_db)):
     post = db.query(models.Post).filter(models.Post.id == id)
 
@@ -58,7 +58,7 @@ async def delete_post(id: int, db: Session = Depends(get_db)):
 
 
 #Update Post
-@router.put("/posts/{id}")
+@router.put("/{id}")
 async def update_post(id: int, post: schemas.Post, db: Session = Depends(get_db)):
 
     update_post = db.query(models.Post).filter(models.Post.id == id)
