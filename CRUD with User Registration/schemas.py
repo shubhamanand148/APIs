@@ -42,3 +42,12 @@ class UserResponse(UserBase):
 class UserLogin(BaseModel):
     email: EmailStr
     password: str
+
+class LoginToken(BaseModel):
+    access_token: str
+    token_type: str
+
+# Schema for the Token Data i.e. the data embedded into Token.
+class TokenData(BaseModel):
+    id: Optional[str] = None
+    email: Optional[str] = None

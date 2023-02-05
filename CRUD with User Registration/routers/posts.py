@@ -1,4 +1,4 @@
-import models, schemas
+import models, schemas, oauth2
 from fastapi import status, HTTPException, Depends, APIRouter, Response
 from sqlalchemy.orm import Session
 from database import get_db
@@ -13,15 +13,17 @@ async def get_posts(db: Session = Depends(get_db)):
 
 #Creates Post
 #The default status code is 200, but it is recommended to use 201 while creating a data.
-@router.post("", status_code = status.HTTP_201_CREATED)
-async def create_post(post: schemas.Post, db: Session = Depends(get_db)):
+@router.post("", status_code = status.HTTP_201_CREATED, response_model=schemas.TokenData)
+# user_cred variable returns us the id and email of the user logged in.
+async def create_post(post: schemas.Post, db: Session = Depends(get_db),
+                      user_cred: schemas.TokenData = Depends(oauth2.get_current_user)):
 
 # post is Post class and models.Post is from models class.
+    print(user_cred.email, "\t", user_cred.id)
     new_post = models.Post(**post.dict())
     db.add(new_post)
     db.commit()        #Saves the changes to the Database.
     db.refresh(new_post)
-    print(post.content)
     return new_post
 
 @router.get("/latest")
@@ -44,7 +46,8 @@ async def post_by_id(id: int, db: Session = Depends(get_db)):
 # HTTP Status 204 (No Content) indicates that the server has successfully fulfilled the request
 # and that there is no content to send in the response payload body.
 @router.delete("/{id}", status_code=status.HTTP_204_NO_CONTENT)
-async def delete_post(id: int, db: Session = Depends(get_db)):
+async def delete_post(id: int, db: Session = Depends(get_db),
+                      user_cred: schemas.TokenData = Depends(oauth2.get_current_user)):
     post = db.query(models.Post).filter(models.Post.id == id)
 
     #Chech if the index is there in the ID.
@@ -59,7 +62,8 @@ async def delete_post(id: int, db: Session = Depends(get_db)):
 
 #Update Post
 @router.put("/{id}")
-async def update_post(id: int, post: schemas.Post, db: Session = Depends(get_db)):
+async def update_post(id: int, post: schemas.Post, db: Session = Depends(get_db),
+                      user_cred: schemas.TokenData = Depends(oauth2.get_current_user)):
 
     update_post = db.query(models.Post).filter(models.Post.id == id)
 
