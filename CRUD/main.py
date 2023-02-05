@@ -20,7 +20,9 @@ async def get_posts(db: Session = Depends(get_db)):
 @app.post("/posts", status_code = status.HTTP_201_CREATED)
 async def create_post(post: schemas.Post, db: Session = Depends(get_db)):
 
-# post is Post class and models.Post is from models class.
+# post is Post class from schemas and models.Post is from models class.
+
+    # new_post = models.Post(title=post.title, content=post.content, rating=post.rating, published=post.published)
     new_post = models.Post(**post.dict())
     db.add(new_post)
     db.commit()        #Saves the changes to the Database.
