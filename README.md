@@ -6,6 +6,9 @@
 3. Check the response in postman.
 
 
+
+
+
 1. **fastapi_CRUD.py:** It is a simple project which does CRUD operations with postgres using fastapi and sql.
                         It uses Pydantic data model i.e. We check the request/response data we get for any constraints.
                         Like if we want to keep a certain value as integer, or if some value is required. It throws exception if the constraints are not met.
