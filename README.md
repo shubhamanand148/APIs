@@ -2,8 +2,9 @@
 
 **To run these projects:**
 1. Open the file containg the file (or main.py file).
-2. Run in CMD: uvicorn main:app --reload
+2. Run in CMD: uvicorn <filename>:app --reload
 3. Check the response in postman.
+  File name for fastapi_CRUD.py is fastapi_CRUD
 
 
 
