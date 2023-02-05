@@ -7,6 +7,7 @@ from fastapi.security.oauth2 import OAuth2PasswordRequestForm
 router = APIRouter(tags=['Authentication'], prefix='/login')
 
 @router.post("")
+
 # OAuth2PasswordRequestForm is a dictionary consisting of 2 keys:
 # 1. Username: It can have any value id/email/username.
 # 2. Password: It has to be the password of the user.

@@ -1,3 +1,5 @@
+# user_cred in this file is used for user authentication.
+
 import models, schemas, oauth2
 from fastapi import status, HTTPException, Depends, APIRouter, Response
 from sqlalchemy.orm import Session
@@ -6,14 +8,16 @@ from database import get_db
 
 router = APIRouter(prefix="/posts", tags=['posts'])
 
+#This gets all the posts in the database. It does not require user authentication.
 @router.get("")
 async def get_posts(db: Session = Depends(get_db)):
     posts = db.query(models.Post).all()
     return posts
 
-#Creates Post
+#This Creates Post. It requires user authentication.
 #The default status code is 200, but it is recommended to use 201 while creating a data.
 @router.post("", status_code = status.HTTP_201_CREATED, response_model=schemas.TokenData)
+
 # user_cred variable returns us the id and email of the user logged in.
 async def create_post(post: schemas.Post, db: Session = Depends(get_db),
                       user_cred: schemas.TokenData = Depends(oauth2.get_current_user)):
@@ -26,6 +30,7 @@ async def create_post(post: schemas.Post, db: Session = Depends(get_db),
     db.refresh(new_post)
     return new_post
 
+# This gets the last added post from the database. 
 @router.get("/latest")
 async def get_latest_post(db: Session = Depends(get_db)):
 
