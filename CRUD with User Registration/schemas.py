@@ -50,7 +50,7 @@ class Post(PostBase):
 
 
 #This is the model for the response which user gets back from the server.
-#In this project it is used only in "post/id"
+#In this project it is used only in "post/id" or "post/latest"
 class PostResponse(PostBase):
     created_at: datetime
     user_id: int
