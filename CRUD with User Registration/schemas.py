@@ -2,33 +2,14 @@ from pydantic import BaseModel, EmailStr
 from typing import Optional
 from datetime import datetime
 
-
-class PostBase(BaseModel):
-    title: str
-    published: Optional[bool] = False
-
-#This is the model for the request which user sends to the server.
-class Post(PostBase):
-    content: str
-    rating: Optional[int] = None
-
-
-#This is the model for the response which user gets back from the server.
-#In this project it is used only in "post/id"
-class PostResponse(PostBase):
-    created_at: datetime
-    user_id: int
-
-    class Config:
-        orm_mode=True
-
-############################################################################################
-
 # User Schema
 
 class UserBase(BaseModel):
     name: str
     email: EmailStr
+    
+    class Config:
+        orm_mode=True
 
 class UserCreate(UserBase):
     password: str
@@ -52,6 +33,31 @@ class LoginToken(BaseModel):
 class TokenData(BaseModel):
     id: Optional[str] = None
     email: Optional[str] = None
+
+    class Config:
+        orm_mode=True
+
+#######################################################################################
+
+class PostBase(BaseModel):
+    title: str
+    published: Optional[bool] = False
+
+#This is the model for the request which user sends to the server.
+class Post(PostBase):
+    content: str
+    rating: Optional[int] = None
+
+
+#This is the model for the response which user gets back from the server.
+#In this project it is used only in "post/id"
+class PostResponse(PostBase):
+    created_at: datetime
+    user_id: int
+
+    # This will add the user data in the posts.
+    # Based on the user relationship in models file.
+    user: UserBase
 
     class Config:
         orm_mode=True

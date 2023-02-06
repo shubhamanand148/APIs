@@ -2,6 +2,7 @@ from database import Base
 from sqlalchemy import Column, Integer, String, Boolean, ForeignKey
 from sqlalchemy.sql.expression import text
 from sqlalchemy.sql.sqltypes import TIMESTAMP
+from sqlalchemy.orm import Relationship
 
 class Post(Base):
     __tablename__ = "posts"
@@ -13,6 +14,11 @@ class Post(Base):
     rating = Column(Integer)
     created_at = Column(TIMESTAMP(timezone=True), nullable=False, server_default=text('now()'))
     user_id = Column(Integer, ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
+
+
+    # This is a relationship, not a foreign key.
+    # It automatically fetches data from the User class (users table) based on relationship.
+    user = Relationship("User")
 
 
 class User(Base):

@@ -31,7 +31,7 @@ async def create_post(post: schemas.Post, db: Session = Depends(get_db),
     return new_post
 
 # This gets the last added post from the database. 
-@router.get("/latest")
+@router.get("/latest", response_model=schemas.PostResponse)
 async def get_latest_post(db: Session = Depends(get_db)):
 
     post = db.query(models.Post).order_by(models.Post.created_at.desc()).first()
