@@ -20,10 +20,10 @@ async def get_posts(db: Session = Depends(get_db)):
 
 # user_cred variable returns us the id and email of the user logged in.
 async def create_post(post: schemas.Post, db: Session = Depends(get_db),
-                      user_cred: schemas.TokenData = Depends(oauth2.get_current_user)):
+                      current_user: schemas.TokenData = Depends(oauth2.get_current_user)):
 
 # post is Post class and models.Post is from models class.
-    print(user_cred.email, "\t", user_cred.id)
+    print(current_user.email, "\t", current_user.id)
     new_post = models.Post(**post.dict())
     db.add(new_post)
     db.commit()        #Saves the changes to the Database.
@@ -52,7 +52,7 @@ async def post_by_id(id: int, db: Session = Depends(get_db)):
 # and that there is no content to send in the response payload body.
 @router.delete("/{id}", status_code=status.HTTP_204_NO_CONTENT)
 async def delete_post(id: int, db: Session = Depends(get_db),
-                      user_cred: schemas.TokenData = Depends(oauth2.get_current_user)):
+                      current_user: schemas.TokenData = Depends(oauth2.get_current_user)):
     post = db.query(models.Post).filter(models.Post.id == id)
 
     #Chech if the index is there in the ID.
@@ -68,7 +68,7 @@ async def delete_post(id: int, db: Session = Depends(get_db),
 #Update Post
 @router.put("/{id}")
 async def update_post(id: int, post: schemas.Post, db: Session = Depends(get_db),
-                      user_cred: schemas.TokenData = Depends(oauth2.get_current_user)):
+                      current_user: schemas.TokenData = Depends(oauth2.get_current_user)):
 
     update_post = db.query(models.Post).filter(models.Post.id == id)
 

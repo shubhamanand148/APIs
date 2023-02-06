@@ -8,7 +8,7 @@ router = APIRouter(tags=['Authentication'], prefix='/login')
 
 @router.post("")
 
-# OAuth2PasswordRequestForm is a dictionary consisting of 2 keys:
+# OAuth2PasswordRequestForm allows us to enter the values as a form. Itis a dictionary consisting of 2 keys:
 # 1. Username: It can have any value id/email/username.
 # 2. Password: It has to be the password of the user.
 async def login(user_credential: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):

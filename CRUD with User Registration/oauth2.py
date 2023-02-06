@@ -2,7 +2,8 @@ from jose import JWTError, jwt
 from datetime import datetime, timedelta
 from fastapi import Depends, status, HTTPException
 from fastapi.security import OAuth2PasswordBearer
-import schemas
+from sqlalchemy.orm import Session
+import schemas, database, models
 
 # The JWT Login Token consists of 4 things (Constant values) which we will need to provide.
 # 1. SECRET_KEY: Its a key which resides on the API Server.
@@ -52,8 +53,15 @@ def verify_access_token(token: str, credential_exception):
     return token_data
 
 
-def get_current_user(token: str = Depends(oauth2_scheme)):
+# This function fetches the user from the database once the verify_access_token function gives the id.
+# So that we can attach the user to path operation and perform logics.
+# Alternatively, the path operations can fetch the users.
+def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(database.get_db)):
     credential_exception = HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid Credentials.",
                                          headers={"WWW-Authenticate": "Bearer"})
 
-    return verify_access_token(token, credential_exception)
+    token = verify_access_token(token, credential_exception)
+
+    user = db.query(models.User).filter(models.User.id == token.id).first()
+
+    return user
