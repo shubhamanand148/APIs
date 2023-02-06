@@ -17,6 +17,7 @@ class Post(PostBase):
 #In this project it is used only in "post/id"
 class PostResponse(PostBase):
     created_at: datetime
+    user_id: int
 
     class Config:
         orm_mode=True
